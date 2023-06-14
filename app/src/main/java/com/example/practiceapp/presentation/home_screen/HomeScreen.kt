@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.practiceapp.presentation.composables.CalendarDayItem
+import com.example.practiceapp.presentation.composables.TopTaskItem
 import com.example.practiceapp.presentation.ui.theme.PracticeAppTheme
 
 val daysList = listOf(
@@ -27,6 +28,11 @@ val daysList = listOf(
     DayModel("7", "Sun"),
 )
 
+val topTasksList = listOf(
+    TopTaskModel(type = "Meeting", name = "Amanda at Ruth's", time = "10:00 AM"),
+    TopTaskModel(type = "Meeting", name = "Hey Hey Hey", time = "12:00 PM")
+)
+
 @Composable
 fun HomeScreen(modifier: Modifier) {
     Column(
@@ -35,6 +41,7 @@ fun HomeScreen(modifier: Modifier) {
             .background(color = Color(0xFFDCE3EC))
     ) {
         DaysSection(modifier = Modifier)
+        TopTasksSection(modifier = Modifier)
     }
 }
 
@@ -59,7 +66,11 @@ fun DaysSection(modifier: Modifier) {
 
 @Composable
 fun TopTasksSection(modifier: Modifier) {
-
+    LazyRow(modifier = modifier.fillMaxWidth()) {
+        items(topTasksList) {task ->
+            TopTaskItem(modifier = Modifier, task)
+        }
+    }
 }
 
 @Composable
