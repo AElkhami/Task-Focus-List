@@ -33,5 +33,10 @@ val Typography = Typography(
         fontFamily = appFont,
         fontWeight = FontWeight.SemiBold,
         fontSize = 18.sp,
+    ),
+    titleLarge = TextStyle(
+        fontFamily = appFont,
+        fontWeight = FontWeight.Bold,
+        fontSize = 21.sp,
     )
 )
