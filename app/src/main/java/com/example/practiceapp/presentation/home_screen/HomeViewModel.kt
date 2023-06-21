@@ -9,6 +9,7 @@ import com.example.practiceapp.presentation.home_screen.models.DayModel
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.util.Calendar
 
 @SuppressLint("MutableCollectionMutableState")
@@ -22,7 +23,9 @@ class HomeViewModel : ViewModel() {
 
     @SuppressLint("SimpleDateFormat")
     private fun generateDaysInWeekList() {
+        val today = Calendar.getInstance().time
         val format: DateFormat = SimpleDateFormat("EEE")
+        val todayFormatted = format.format(today)
         val calendar: Calendar = Calendar.getInstance()
         calendar.firstDayOfWeek = Calendar.MONDAY
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
@@ -34,12 +37,15 @@ class HomeViewModel : ViewModel() {
         }
 
         DayOfWeek.values().zip(days) { dayNum, dayName ->
-            weeksList.add(
-                DayModel(
-                    dayNum = dayNum.dayOfMonth().toString(),
-                    dayName = dayName!!
+            dayName?.let {
+                weeksList.add(
+                    DayModel(
+                        dayNum = dayNum.dayOfMonth().toString(),
+                        dayName = dayName,
+                        isSelected = todayFormatted == dayName
+                    )
                 )
-            )
+            }
         }
     }
 }

@@ -65,6 +65,8 @@ val tasksList = listOf(
     TaskModel(taskName = "Meetings", taskType = "8 Tasks", color = Color(0xffF55C26))
 )
 
+lateinit var selectedDay: DayModel
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(modifier: Modifier) {
@@ -173,15 +175,20 @@ fun DaysSection(weeksList: MutableList<DayModel>) {
                     .width(77.dp)
                     .height(90.dp)
                     .padding(8.dp),
-                currentWeek[index]
-            ) {
+                currentWeek[index],
+            ) { dayItem ->
                 currentWeek = currentWeek.mapIndexed { selectedIndex, dayModel ->
                     if (index == selectedIndex) {
-                        dayModel.copy(isSelected = !dayModel.isSelected)
+                        if (dayModel.isSelected) {
+                            dayModel.copy(isSelected = true)
+                        } else {
+                            dayModel.copy(isSelected = true)
+                        }
                     } else {
                         dayModel.copy(isSelected = false)
                     }
                 } as MutableList<DayModel>
+                selectedDay = dayItem
             }
         }
     }

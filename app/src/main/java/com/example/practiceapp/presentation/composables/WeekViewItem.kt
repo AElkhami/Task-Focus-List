@@ -23,7 +23,7 @@ import com.example.practiceapp.presentation.ui.theme.PracticeAppTheme
 fun CalendarDayItem(
     modifier: Modifier,
     dayItem: DayModel,
-    onClick: () -> Unit
+    onClick: (DayModel) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.Center,
@@ -34,7 +34,7 @@ fun CalendarDayItem(
                 color = if (dayItem.isSelected) Color(0xFFB3DDE3) else Color(0xFFF3F3F6)
             )
             .clickable {
-                onClick()
+                onClick(dayItem)
             }
             .padding(8.dp)
     ) {
