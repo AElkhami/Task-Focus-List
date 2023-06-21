@@ -36,14 +36,14 @@ fun TopTaskItem(modifier: Modifier, task: TopTaskModel) {
             modifier = Modifier
                 .fillMaxHeight()
                 .width(10.dp)
-                .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
+                .clip(RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp))
                 .background(Color(0xffF55C26))
         )
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .width(180.dp)
-                .clip(RoundedCornerShape(topEnd = 32.dp, bottomEnd = 32.dp))
+                .clip(RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp))
                 .background(Color.White)
                 .padding(16.dp),
             horizontalAlignment = Alignment.Start

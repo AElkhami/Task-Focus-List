@@ -1,5 +1,6 @@
 package com.example.practiceapp.presentation.home_screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -64,18 +65,21 @@ val tasksList = listOf(
     TaskModel(taskName = "Meetings", taskType = "8 Tasks", color = Color(0xffF55C26))
 )
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(modifier: Modifier) {
-    Scaffold(modifier = modifier, floatingActionButton = {
-        FloatingActionButton(onClick = { /*TODO*/ }) {
-            Icon(Icons.Default.Add, contentDescription = "Add")
-        }
-    },
+    val viewModel = HomeViewModel()
+
+    Scaffold(
+        modifier = modifier,
+        floatingActionButton = {
+            FloatingActionButton(onClick = { /*TODO*/ }) {
+                Icon(Icons.Default.Add, contentDescription = "Add")
+            }
+        },
         floatingActionButtonPosition = FabPosition.End,
 
-    ) {
+        ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -83,7 +87,7 @@ fun HomeScreen(modifier: Modifier) {
                 .background(color = Color(0xFFDCE3EC))
         ) {
             TopSection()
-            DaysSection()
+            DaysSection(viewModel.weeksList)
             Text(
                 text = "High pariority tasks",
                 style = MaterialTheme.typography.titleMedium,
@@ -149,22 +153,13 @@ fun TopSection() {
     }
 }
 
+@SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun DaysSection() {
-    var daysList by remember {
-        mutableStateOf(
-            listOf(
-                DayModel("1", "Mon"),
-                DayModel("2", "Tue"),
-                DayModel("3", "Wed"),
-                DayModel("4", "Thu"),
-                DayModel("5", "Fri"),
-                DayModel("6", "Sat"),
-                DayModel("7", "Sun"),
-            )
-        )
-    }
+fun DaysSection(weeksList: MutableList<DayModel>) {
+
+    var currentWeek by remember { mutableStateOf(weeksList) }
+
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
@@ -172,21 +167,21 @@ fun DaysSection() {
             .semantics { testTagsAsResourceId = true }
             .testTag("DaysList"),
     ) {
-        items(daysList.size) { index ->
+        items(currentWeek.size) { index ->
             CalendarDayItem(
                 modifier = Modifier
                     .width(77.dp)
                     .height(90.dp)
                     .padding(8.dp),
-                daysList[index]
+                currentWeek[index]
             ) {
-                daysList = daysList.mapIndexed { selectedIndex, dayModel ->
+                currentWeek = currentWeek.mapIndexed { selectedIndex, dayModel ->
                     if (index == selectedIndex) {
                         dayModel.copy(isSelected = !dayModel.isSelected)
                     } else {
                         dayModel.copy(isSelected = false)
                     }
-                }
+                } as MutableList<DayModel>
             }
         }
     }
