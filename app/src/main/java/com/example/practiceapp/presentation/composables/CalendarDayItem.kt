@@ -1,6 +1,7 @@
 package com.example.practiceapp.presentation.composables
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -19,22 +20,31 @@ import com.example.practiceapp.presentation.home_screen.models.DayModel
 import com.example.practiceapp.presentation.ui.theme.PracticeAppTheme
 
 @Composable
-fun CalendarDayItem(modifier: Modifier, dayitem: DayModel) {
+fun CalendarDayItem(
+    modifier: Modifier,
+    dayItem: DayModel,
+    onClick: () -> Unit
+) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
-            .background(color = Color(0xFFF3F3F6))
+            .background(
+                color = if (dayItem.isSelected) Color(0xFFB3DDE3) else Color(0xFFF3F3F6)
+            )
+            .clickable {
+                onClick()
+            }
             .padding(8.dp)
     ) {
         Text(
-            text = dayitem.dayNum,
+            text = dayItem.dayNum,
             style = MaterialTheme.typography.titleMedium
         )
         Spacer(modifier = Modifier.padding(top = 8.dp))
         Text(
-            text = dayitem.dayName,
+            text = dayItem.dayName,
             style = MaterialTheme.typography.bodySmall
         )
     }
@@ -44,6 +54,6 @@ fun CalendarDayItem(modifier: Modifier, dayitem: DayModel) {
 @Composable
 fun CalendarDayItemPreview() {
     PracticeAppTheme {
-        CalendarDayItem(modifier = Modifier, DayModel("8", "Mon"))
+        CalendarDayItem(modifier = Modifier, DayModel("8", "Mon")) {}
     }
 }

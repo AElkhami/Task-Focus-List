@@ -15,15 +15,28 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,15 +49,6 @@ import com.example.practiceapp.presentation.home_screen.models.TopTaskModel
 import com.example.practiceapp.presentation.ui.theme.MainTeal
 import com.example.practiceapp.presentation.ui.theme.PracticeAppTheme
 
-val daysList = listOf(
-    DayModel("1", "Mon"),
-    DayModel("2", "Tue"),
-    DayModel("3", "Wed"),
-    DayModel("4", "Thu"),
-    DayModel("5", "Fri"),
-    DayModel("6", "Sat"),
-    DayModel("7", "Sun"),
-)
 
 val topTasksList = listOf(
     TopTaskModel(type = "Meeting", name = "Amanda at Ruth's", time = "10:00 AM"),
@@ -60,28 +64,41 @@ val tasksList = listOf(
     TaskModel(taskName = "Meetings", taskType = "8 Tasks", color = Color(0xffF55C26))
 )
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(modifier: Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = Color(0xFFDCE3EC))
+    Scaffold(modifier = modifier, floatingActionButton = {
+        FloatingActionButton(onClick = { /*TODO*/ }) {
+            Icon(Icons.Default.Add, contentDescription = "Add")
+        }
+    },
+        floatingActionButtonPosition = FabPosition.End,
+
     ) {
-        TopSection()
-        DaysSection()
-        Text(
-            text = "High pariority tasks",
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(16.dp)
-        )
-        TopTasksSection()
-        Text(
-            text = "Tasks",
-            style = MaterialTheme.typography.titleMedium,
-            modifier = Modifier.padding(16.dp)
-        )
-        NormalTasksSection()
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+                .background(color = Color(0xFFDCE3EC))
+        ) {
+            TopSection()
+            DaysSection()
+            Text(
+                text = "High pariority tasks",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+            )
+            TopTasksSection()
+            Text(
+                text = "Tasks",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+            )
+            NormalTasksSection()
+        }
     }
+
 }
 
 @Composable
@@ -89,7 +106,7 @@ fun TopSection() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(190.dp)
+            .height(180.dp)
             .clip(RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
             .background(MainTeal)
     ) {
@@ -110,7 +127,7 @@ fun TopSection() {
                 Icon(
                     Icons.Outlined.Notifications,
                     tint = Color.White,
-                    contentDescription = "Profile",
+                    contentDescription = "Notification",
                     modifier = Modifier.padding(16.dp)
                 )
             }
@@ -132,31 +149,58 @@ fun TopSection() {
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun DaysSection() {
+    var daysList by remember {
+        mutableStateOf(
+            listOf(
+                DayModel("1", "Mon"),
+                DayModel("2", "Tue"),
+                DayModel("3", "Wed"),
+                DayModel("4", "Thu"),
+                DayModel("5", "Fri"),
+                DayModel("6", "Sat"),
+                DayModel("7", "Sun"),
+            )
+        )
+    }
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 4.dp, end = 4.dp, top = 16.dp),
+            .padding(start = 4.dp, end = 4.dp, top = 16.dp)
+            .semantics { testTagsAsResourceId = true }
+            .testTag("DaysList"),
     ) {
-        items(daysList) { dayItem ->
+        items(daysList.size) { index ->
             CalendarDayItem(
                 modifier = Modifier
                     .width(77.dp)
                     .height(90.dp)
                     .padding(8.dp),
-                dayItem
-            )
+                daysList[index]
+            ) {
+                daysList = daysList.mapIndexed { selectedIndex, dayModel ->
+                    if (index == selectedIndex) {
+                        dayModel.copy(isSelected = !dayModel.isSelected)
+                    } else {
+                        dayModel.copy(isSelected = false)
+                    }
+                }
+            }
         }
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun TopTasksSection() {
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 4.dp, end = 4.dp)
+            .semantics { testTagsAsResourceId = true }
+            .testTag("TopTasksList")
     ) {
         items(topTasksList) { task ->
             TopTaskItem(modifier = Modifier, task)
@@ -164,12 +208,15 @@ fun TopTasksSection() {
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun NormalTasksSection() {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 4.dp, end = 4.dp)
+            .semantics { testTagsAsResourceId = true }
+            .testTag("TasksList")
     ) {
         items(tasksList) { task ->
             TaskItem(modifier = Modifier, task)

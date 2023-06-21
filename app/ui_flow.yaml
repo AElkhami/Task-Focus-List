@@ -1,0 +1,22 @@
+appId: com.example.practiceapp
+---
+- launchApp
+- assertVisible: "Profile"
+- assertVisible: "Notification"
+- assertVisible: "Good Morning"
+- assertVisible: "0 out of 10 tasks today."
+- swipe:
+    from:
+      id: "DaysList"
+    direction: LEFT
+- tapOn: "7"
+- assertVisible:
+   text: "7"
+- swipe:
+    from:
+      id: "TopTasksList"
+    direction: LEFT
+- swipe:
+    from:
+      id: "TasksList"
+    direction: UP
