@@ -21,11 +21,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.practiceapp.presentation.home_screen.models.TopTaskModel
+import com.example.practiceapp.presentation.home_screen.models.TaskModel
 import com.example.practiceapp.presentation.ui.theme.PracticeAppTheme
 
 @Composable
-fun TopTaskItem(modifier: Modifier, task: TopTaskModel) {
+fun TopTaskItem(modifier: Modifier, task: TaskModel) {
     Row(
         modifier = modifier
             .padding(8.dp)
@@ -49,12 +49,12 @@ fun TopTaskItem(modifier: Modifier, task: TopTaskModel) {
             horizontalAlignment = Alignment.Start
         ) {
             Text(
-                text = task.type,
+                text = task.taskType,
                 color = Color(0xffF55C26),
                 style = MaterialTheme.typography.bodyMedium
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = task.name, style = MaterialTheme.typography.titleMedium)
+            Text(text = task.taskName, style = MaterialTheme.typography.titleMedium)
             Text(text = task.time, style = MaterialTheme.typography.bodySmall)
         }
     }
@@ -66,7 +66,7 @@ fun TopTaskItemPreview() {
     PracticeAppTheme {
         TopTaskItem(
             modifier = Modifier,
-            task = TopTaskModel(type = "Meeting", name = "Amanda at Ruth's", time = "10:00 AM")
+            task = TaskModel(taskType = "Meeting", taskName = "Amanda at Ruth's", time = "10:00 AM", color = Color(0xffF55C26))
         )
     }
 }

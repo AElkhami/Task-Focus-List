@@ -19,17 +19,23 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -42,28 +48,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.practiceapp.presentation.composables.CalendarDayItem
+import com.example.practiceapp.presentation.composables.CreateTaskBottomSheet
 import com.example.practiceapp.presentation.composables.TaskItem
 import com.example.practiceapp.presentation.composables.TopTaskItem
 import com.example.practiceapp.presentation.home_screen.models.DayModel
 import com.example.practiceapp.presentation.home_screen.models.TaskModel
-import com.example.practiceapp.presentation.home_screen.models.TopTaskModel
 import com.example.practiceapp.presentation.ui.theme.MainTeal
 import com.example.practiceapp.presentation.ui.theme.PracticeAppTheme
-
-
-val topTasksList = listOf(
-    TopTaskModel(type = "Meeting", name = "Amanda at Ruth's", time = "10:00 AM"),
-    TopTaskModel(type = "Meeting", name = "Hey Hey Hey", time = "12:00 PM"),
-    TopTaskModel(type = "Meeting", name = "Amanda at Ruth's", time = "10:00 AM"),
-    TopTaskModel(type = "Meeting", name = "Hey Hey Hey", time = "12:00 PM")
-)
-
-val tasksList = listOf(
-    TaskModel(taskName = "General", taskType = "16 Tasks", color = Color(0xff3068DF)),
-    TaskModel(taskName = "Meetings", taskType = "8 Tasks", color = Color(0xffF55C26)),
-    TaskModel(taskName = "General", taskType = "16 Tasks", color = Color(0xff3068DF)),
-    TaskModel(taskName = "Meetings", taskType = "8 Tasks", color = Color(0xffF55C26))
-)
+import kotlinx.coroutines.launch
 
 lateinit var selectedDay: DayModel
 
@@ -72,39 +64,125 @@ lateinit var selectedDay: DayModel
 fun HomeScreen(modifier: Modifier) {
     val viewModel = HomeViewModel()
 
-    Scaffold(
-        modifier = modifier,
-        floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End,
-
-        ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(it)
-                .background(color = Color(0xFFDCE3EC))
-        ) {
-            TopSection()
-            DaysSection(viewModel.weeksList)
-            Text(
-                text = "High pariority tasks",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+    val topTasksList = remember {
+        mutableStateListOf(
+            TaskModel(
+                taskType = "Meeting",
+                taskName = "Amanda at Ruth's",
+                time = "10:00 AM",
+                color = Color(0xff3068DF)
+            ),
+            TaskModel(
+                taskType = "Meeting",
+                taskName = "Hey Hey Hey",
+                time = "12:00 PM",
+                color = Color(0xff3068DF)
+            ),
+            TaskModel(
+                taskType = "Meeting",
+                taskName = "Amanda at Ruth's",
+                time = "10:00 AM",
+                color = Color(0xff3068DF)
+            ),
+            TaskModel(
+                taskType = "Meeting",
+                taskName = "Hey Hey Hey",
+                time = "12:00 PM",
+                color = Color(0xff3068DF)
             )
-            TopTasksSection()
-            Text(
-                text = "Tasks",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
-            )
-            NormalTasksSection()
-        }
+        )
     }
 
+    val tasksList = remember {
+        mutableStateListOf(
+            TaskModel(
+                taskName = "General",
+                taskType = "16 Tasks",
+                color = Color(0xff3068DF),
+                time = "10:00 AM"
+            ),
+            TaskModel(
+                taskName = "Meetings",
+                taskType = "8 Tasks",
+                color = Color(0xffF55C26),
+                time = "10:00 AM"
+            ),
+            TaskModel(
+                taskName = "General",
+                taskType = "16 Tasks",
+                color = Color(0xff3068DF),
+                time = "10:00 AM"
+            ),
+            TaskModel(
+                taskName = "Meetings",
+                taskType = "8 Tasks",
+                color = Color(0xffF55C26),
+                time = "10:00 AM"
+            )
+        )
+    }
+
+    val sheetState =
+        rememberStandardBottomSheetState(initialValue = SheetValue.Hidden, skipHiddenState = false)
+    val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
+    val coroutineScope = rememberCoroutineScope()
+    BottomSheetScaffold(
+        scaffoldState = scaffoldState,
+        sheetContent = {
+            CreateTaskBottomSheet(modifier = Modifier, onCloseClick = {
+                coroutineScope.launch {
+                    sheetState.hide()
+                }
+            }, onDoneClick = { taskModel, isTopTask ->
+                if (isTopTask) {
+                    topTasksList.add(taskModel)
+                } else {
+                    tasksList.add(taskModel)
+                }
+                coroutineScope.launch {
+                    sheetState.hide()
+                }
+            })
+        },
+        sheetSwipeEnabled = false,
+        sheetDragHandle = null,
+    ) {
+        Scaffold(
+            modifier = modifier,
+            floatingActionButton = {
+                FloatingActionButton(onClick = {
+                    coroutineScope.launch {
+                        sheetState.expand()
+                    }
+                }) {
+                    Icon(Icons.Default.Add, contentDescription = "Add")
+                }
+            },
+            floatingActionButtonPosition = FabPosition.End,
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(it)
+                    .background(color = Color(0xFFDCE3EC))
+            ) {
+                TopSection()
+                DaysSection(viewModel.weeksList)
+                Text(
+                    text = "High pariority tasks",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                )
+                TopTasksSection(topTasksList)
+                Text(
+                    text = "Tasks",
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                )
+                NormalTasksSection(tasksList)
+            }
+        }
+    }
 }
 
 @Composable
@@ -196,7 +274,7 @@ fun DaysSection(weeksList: MutableList<DayModel>) {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun TopTasksSection() {
+fun TopTasksSection(topTasksList: List<TaskModel>) {
     LazyRow(
         modifier = Modifier
             .fillMaxWidth()
@@ -212,7 +290,7 @@ fun TopTasksSection() {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun NormalTasksSection() {
+fun NormalTasksSection(tasksList: List<TaskModel>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()

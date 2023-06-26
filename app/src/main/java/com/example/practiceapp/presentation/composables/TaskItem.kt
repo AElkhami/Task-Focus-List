@@ -62,7 +62,7 @@ fun TaskItemPreview() {
     PracticeAppTheme {
         TaskItem(
             modifier = Modifier,
-            task = TaskModel("Workout", "Training", Color(0xff3068DF))
+            task = TaskModel("Workout", "Training", Color(0xff3068DF), time = "10:00 AM")
         )
     }
 }
