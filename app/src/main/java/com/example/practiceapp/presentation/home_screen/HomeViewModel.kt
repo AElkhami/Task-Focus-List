@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.practiceapp.presentation.extensions.dayOfMonth
-import com.example.practiceapp.presentation.home_screen.models.DayModel
+import com.example.practiceapp.presentation.home_screen.model.DayModel
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek

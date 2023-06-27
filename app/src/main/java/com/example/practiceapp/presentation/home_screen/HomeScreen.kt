@@ -51,8 +51,8 @@ import com.example.practiceapp.presentation.composables.CalendarDayItem
 import com.example.practiceapp.presentation.composables.CreateTaskBottomSheet
 import com.example.practiceapp.presentation.composables.TaskItem
 import com.example.practiceapp.presentation.composables.TopTaskItem
-import com.example.practiceapp.presentation.home_screen.models.DayModel
-import com.example.practiceapp.presentation.home_screen.models.TaskModel
+import com.example.practiceapp.presentation.home_screen.model.DayModel
+import com.example.practiceapp.presentation.home_screen.model.TaskModel
 import com.example.practiceapp.presentation.ui.theme.MainTeal
 import com.example.practiceapp.presentation.ui.theme.PracticeAppTheme
 import kotlinx.coroutines.launch

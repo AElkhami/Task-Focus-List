@@ -1,7 +1,7 @@
 package com.example.practiceapp.presentation.home_screen
 
 
-import com.example.practiceapp.presentation.home_screen.models.DayModel
+import com.example.practiceapp.presentation.home_screen.model.DayModel
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

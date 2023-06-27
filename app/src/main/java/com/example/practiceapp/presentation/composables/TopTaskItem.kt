@@ -21,7 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.practiceapp.presentation.home_screen.models.TaskModel
+import com.example.practiceapp.presentation.home_screen.model.TaskModel
 import com.example.practiceapp.presentation.ui.theme.PracticeAppTheme
 
 @Composable

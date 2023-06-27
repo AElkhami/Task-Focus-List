@@ -1,4 +1,4 @@
-package com.example.practiceapp.presentation.home_screen.models
+package com.example.practiceapp.presentation.home_screen.model
 
 data class DayModel(
     val dayNum: String = "",
