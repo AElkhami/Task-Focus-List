@@ -9,7 +9,6 @@ import com.example.practiceapp.presentation.home_screen.models.DayModel
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
-import java.time.LocalDate
 import java.util.Calendar
 
 @SuppressLint("MutableCollectionMutableState")
@@ -22,7 +21,7 @@ class HomeViewModel : ViewModel() {
     }
 
     @SuppressLint("SimpleDateFormat")
-    private fun generateDaysInWeekList() {
+    fun generateDaysInWeekList() {
         val today = Calendar.getInstance().time
         val format: DateFormat = SimpleDateFormat("EEE")
         val todayFormatted = format.format(today)
