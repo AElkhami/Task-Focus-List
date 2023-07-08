@@ -35,7 +35,7 @@ import com.example.practiceapp.presentation.ui.theme.PracticeAppTheme
 @Composable
 fun CreateTaskBottomSheet(
     modifier: Modifier,
-    onDoneClick: (TaskModel, Boolean) -> Unit,
+    onDoneClick: (TaskModel) -> Unit,
     onCloseClick: () -> Unit
 ) {
     var taskTitle by remember { mutableStateOf("") }
@@ -108,8 +108,9 @@ fun CreateTaskBottomSheet(
                         taskName = taskTitle,
                         taskType = taskType,
                         color = Color(0xffF55C26),
-                        time = "10:00 AM"
-                    ), isTopTask
+                        time = "10:00 AM",
+                        isTop = isTopTask
+                    )
                 )
             }
         ) {
@@ -122,7 +123,7 @@ fun CreateTaskBottomSheet(
 @Preview(showBackground = true)
 fun CreateTaskBottomSheetPreview() {
     PracticeAppTheme {
-        CreateTaskBottomSheet(modifier = Modifier, onDoneClick = { _, _ ->
+        CreateTaskBottomSheet(modifier = Modifier, onDoneClick = {
 
         }, onCloseClick = {
 

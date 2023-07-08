@@ -8,10 +8,10 @@ import androidx.room.PrimaryKey
  */
 @Entity
 data class TaskEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
     val type: String,
-    val color: String,
+    val color: Int,
     val time: String,
     val isTop: Boolean
 )

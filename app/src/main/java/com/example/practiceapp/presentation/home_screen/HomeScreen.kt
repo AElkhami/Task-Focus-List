@@ -32,7 +32,6 @@ import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -47,6 +46,7 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.practiceapp.presentation.composables.CalendarDayItem
 import com.example.practiceapp.presentation.composables.CreateTaskBottomSheet
 import com.example.practiceapp.presentation.composables.TaskItem
@@ -61,67 +61,10 @@ lateinit var selectedDay: DayModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(modifier: Modifier) {
-    val viewModel = HomeViewModel()
-
-    val topTasksList = remember {
-        mutableStateListOf(
-            TaskModel(
-                taskType = "Meeting",
-                taskName = "Amanda at Ruth's",
-                time = "10:00 AM",
-                color = Color(0xff3068DF)
-            ),
-            TaskModel(
-                taskType = "Meeting",
-                taskName = "Hey Hey Hey",
-                time = "12:00 PM",
-                color = Color(0xff3068DF)
-            ),
-            TaskModel(
-                taskType = "Meeting",
-                taskName = "Amanda at Ruth's",
-                time = "10:00 AM",
-                color = Color(0xff3068DF)
-            ),
-            TaskModel(
-                taskType = "Meeting",
-                taskName = "Hey Hey Hey",
-                time = "12:00 PM",
-                color = Color(0xff3068DF)
-            )
-        )
-    }
-
-    val tasksList = remember {
-        mutableStateListOf(
-            TaskModel(
-                taskName = "General",
-                taskType = "16 Tasks",
-                color = Color(0xff3068DF),
-                time = "10:00 AM"
-            ),
-            TaskModel(
-                taskName = "Meetings",
-                taskType = "8 Tasks",
-                color = Color(0xffF55C26),
-                time = "10:00 AM"
-            ),
-            TaskModel(
-                taskName = "General",
-                taskType = "16 Tasks",
-                color = Color(0xff3068DF),
-                time = "10:00 AM"
-            ),
-            TaskModel(
-                taskName = "Meetings",
-                taskType = "8 Tasks",
-                color = Color(0xffF55C26),
-                time = "10:00 AM"
-            )
-        )
-    }
-
+fun HomeScreen(
+    modifier: Modifier,
+    viewModel: HomeViewModel = hiltViewModel()
+) {
     val sheetState =
         rememberStandardBottomSheetState(initialValue = SheetValue.Hidden, skipHiddenState = false)
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
@@ -133,15 +76,11 @@ fun HomeScreen(modifier: Modifier) {
                 coroutineScope.launch {
                     sheetState.hide()
                 }
-            }, onDoneClick = { taskModel, isTopTask ->
-                if (isTopTask) {
-                    topTasksList.add(taskModel)
-                } else {
-                    tasksList.add(taskModel)
-                }
+            }, onDoneClick = { taskModel ->
                 coroutineScope.launch {
                     sheetState.hide()
                 }
+                viewModel.insertTasks(taskModel)
             })
         },
         sheetSwipeEnabled = false,
@@ -167,19 +106,19 @@ fun HomeScreen(modifier: Modifier) {
                     .background(color = Color(0xFFDCE3EC))
             ) {
                 TopSection()
-                DaysSection(viewModel.weeksList)
+                DaysSection(viewModel.homeUiState.daysList)
                 Text(
                     text = "High pariority tasks",
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
                 )
-                TopTasksSection(topTasksList)
+                TopTasksSection(viewModel.homeUiState.topTasks)
                 Text(
                     text = "Tasks",
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
                 )
-                NormalTasksSection(tasksList)
+                NormalTasksSection(viewModel.homeUiState.tasks)
             }
         }
     }
@@ -236,7 +175,7 @@ fun TopSection() {
 @SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun DaysSection(weeksList: MutableList<DayModel>) {
+fun DaysSection(weeksList: List<DayModel>) {
 
     var currentWeek by remember { mutableStateOf(weeksList) }
 

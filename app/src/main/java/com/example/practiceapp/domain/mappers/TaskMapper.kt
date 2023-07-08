@@ -8,7 +8,6 @@ import com.example.practiceapp.domain.model.Task
  */
 
 fun Task.toTaskEntity() = TaskEntity(
-    id = this.id,
     name = this.name,
     type = this.type,
     color = this.color,
@@ -17,7 +16,6 @@ fun Task.toTaskEntity() = TaskEntity(
 )
 
 fun TaskEntity.toTask() = Task(
-    id = this.id,
     name = this.name,
     type = this.type,
     color = this.color,

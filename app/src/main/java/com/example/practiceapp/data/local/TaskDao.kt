@@ -12,11 +12,11 @@ import androidx.room.Update
  */
 @Dao
 interface TaskDao {
-    @Query("SELECT * FROM taskentity WHERE isTop = 'true'")
-    suspend fun getTopTasks(): List<TaskEntity>
+    @Query("SELECT * FROM taskentity WHERE isTop = '1'")
+    fun getTopTasks(): List<TaskEntity>
 
-    @Query("SELECT * FROM taskentity WHERE isTop = 'false'")
-    suspend fun getTasks(): List<TaskEntity>
+    @Query("SELECT * FROM taskentity WHERE isTop = '0'")
+    fun getTasks(): List<TaskEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTask(task: TaskEntity)

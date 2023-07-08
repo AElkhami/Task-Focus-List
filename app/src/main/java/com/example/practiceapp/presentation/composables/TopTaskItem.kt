@@ -66,7 +66,7 @@ fun TopTaskItemPreview() {
     PracticeAppTheme {
         TopTaskItem(
             modifier = Modifier,
-            task = TaskModel(taskType = "Meeting", taskName = "Amanda at Ruth's", time = "10:00 AM", color = Color(0xffF55C26))
+            task = TaskModel(taskType = "Meeting", taskName = "Amanda at Ruth's", time = "10:00 AM", color = Color(0xffF55C26), isTop = true)
         )
     }
 }
