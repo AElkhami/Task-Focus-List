@@ -6,9 +6,9 @@ import com.example.practiceapp.domain.model.Task
  * Created by A.Elkhami on 27/06/2023.
  */
 interface TaskRepository {
-    fun getTopTasks(): List<Task>
+    suspend fun getTopTasks(): List<Task>
 
-    fun getTasks(): List<Task>
+    suspend fun getTasks(): List<Task>
 
     suspend fun insertTask(task: Task)
 

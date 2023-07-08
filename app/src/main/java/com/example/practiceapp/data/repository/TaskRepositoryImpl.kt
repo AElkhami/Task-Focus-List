@@ -10,13 +10,13 @@ import javax.inject.Inject
  * Created by A.Elkhami on 27/06/2023.
  */
 open class TaskRepositoryImpl @Inject constructor(private val dao: TaskDao) : TaskRepository {
-    override fun getTopTasks(): List<Task> {
+    override suspend fun getTopTasks(): List<Task> {
         return dao.getTopTasks().map {
             it.toTask()
         }
     }
 
-    override fun getTasks(): List<Task> {
+    override suspend fun getTasks(): List<Task> {
         return dao.getTasks().map {
             it.toTask()
         }

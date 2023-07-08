@@ -12,10 +12,10 @@ import androidx.room.Update
  */
 @Dao
 interface TaskDao {
-    @Query("SELECT * FROM taskentity WHERE isTop = '1'")
+    @Query("SELECT * FROM taskentity WHERE isTop = '1' ORDER BY id DESC")
     fun getTopTasks(): List<TaskEntity>
 
-    @Query("SELECT * FROM taskentity WHERE isTop = '0'")
+    @Query("SELECT * FROM taskentity WHERE isTop = '0' ORDER BY id DESC")
     fun getTasks(): List<TaskEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

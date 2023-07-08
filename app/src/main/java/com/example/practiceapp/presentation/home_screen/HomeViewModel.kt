@@ -14,7 +14,9 @@ import com.example.practiceapp.presentation.home_screen.model.TaskModel
 import com.example.practiceapp.presentation.mapper.toTask
 import com.example.practiceapp.presentation.mapper.toTaskModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
@@ -69,24 +71,32 @@ class HomeViewModel @Inject constructor(
     fun insertTasks(task: TaskModel) {
         viewModelScope.launch {
             repository.insertTask(task.toTask())
+            getTopTasks()
+            getTasks()
         }
-        getTopTasks()
-        getTasks()
     }
 
-    private fun getTopTasks() {
-
-            val topTasks = repository.getTopTasks().map {
-                it.toTaskModel()
+     fun getTopTasks() {
+        viewModelScope.launch {
+            var topTasks: List<TaskModel> = emptyList()
+            withContext(Dispatchers.IO) {
+                topTasks = repository.getTopTasks().map {
+                    it.toTaskModel()
+                }
             }
             homeUiState = homeUiState.copy(topTasks = topTasks)
-
+        }
     }
 
-    private fun getTasks() {
-            val tasks = repository.getTasks().map {
-                it.toTaskModel()
+    fun getTasks() {
+        viewModelScope.launch {
+            var tasks: List<TaskModel> = emptyList()
+            withContext(Dispatchers.IO) {
+                tasks = repository.getTasks().map {
+                    it.toTaskModel()
+                }
             }
             homeUiState = homeUiState.copy(tasks = tasks)
+        }
     }
 }
