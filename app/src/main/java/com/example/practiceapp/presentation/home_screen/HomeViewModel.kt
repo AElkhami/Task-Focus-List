@@ -13,7 +13,6 @@ import com.example.practiceapp.presentation.home_screen.model.HomeModel
 import com.example.practiceapp.presentation.home_screen.model.TaskModel
 import com.example.practiceapp.presentation.mapper.toTask
 import com.example.practiceapp.presentation.mapper.toTaskModel
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,11 +20,9 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.util.Calendar
-import javax.inject.Inject
 
 @SuppressLint("MutableCollectionMutableState")
-@HiltViewModel
-class HomeViewModel @Inject constructor(
+class HomeViewModel constructor(
     private val repository: TaskRepository
 ) : ViewModel() {
 

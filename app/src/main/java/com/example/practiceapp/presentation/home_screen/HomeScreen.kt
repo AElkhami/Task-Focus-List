@@ -46,24 +46,34 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.practiceapp.presentation.composables.CalendarDayItem
 import com.example.practiceapp.presentation.composables.CreateTaskBottomSheet
 import com.example.practiceapp.presentation.composables.TaskItem
 import com.example.practiceapp.presentation.composables.TopTaskItem
 import com.example.practiceapp.presentation.home_screen.model.DayModel
+import com.example.practiceapp.presentation.home_screen.model.HomeModel
 import com.example.practiceapp.presentation.home_screen.model.TaskModel
 import com.example.practiceapp.presentation.ui.theme.MainTeal
 import com.example.practiceapp.presentation.ui.theme.PracticeAppTheme
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 lateinit var selectedDay: DayModel
+
+@Composable
+fun HomeScreenHolder(modifier: Modifier) {
+    val viewModel = koinViewModel<HomeViewModel>()
+    HomeScreen(modifier = modifier, viewModel.homeUiState) { taskModel ->
+        viewModel.insertTasks(taskModel)
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier,
-    viewModel: HomeViewModel = hiltViewModel()
+    uiState: HomeModel,
+    onInsertTask: (TaskModel) -> Unit
 ) {
     val sheetState =
         rememberStandardBottomSheetState(initialValue = SheetValue.Hidden, skipHiddenState = false)
@@ -80,7 +90,7 @@ fun HomeScreen(
                 coroutineScope.launch {
                     sheetState.hide()
                 }
-                viewModel.insertTasks(taskModel)
+                onInsertTask(taskModel)
             })
         },
         sheetSwipeEnabled = false,
@@ -106,19 +116,19 @@ fun HomeScreen(
                     .background(color = Color(0xFFDCE3EC))
             ) {
                 TopSection()
-                DaysSection(viewModel.homeUiState.daysList)
+                DaysSection(uiState.daysList)
                 Text(
                     text = "High pariority tasks",
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
                 )
-                TopTasksSection(viewModel.homeUiState.topTasks)
+                TopTasksSection(uiState.topTasks)
                 Text(
                     text = "Tasks",
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp)
                 )
-                NormalTasksSection(viewModel.homeUiState.tasks)
+                NormalTasksSection(uiState.tasks)
             }
         }
     }
@@ -247,6 +257,8 @@ fun NormalTasksSection(tasksList: List<TaskModel>) {
 @Composable
 fun HomeScreenPreview() {
     PracticeAppTheme {
-        HomeScreen(modifier = Modifier)
+        HomeScreen(modifier = Modifier, HomeModel()){
+
+        }
     }
 }
